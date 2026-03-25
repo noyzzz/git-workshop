@@ -37,10 +37,15 @@ git init
 ```
 
 ### Step 3 — Create a few files
-```bash
-echo "# My Project" > README.md
-echo "node_modules/" > .gitignore
-echo "console.log('hello');" > app.js
+
+**Create `README.md`** with this content:
+```
+# My Project
+```
+
+**Create `app.js`** with this content:
+```javascript
+console.log('hello');
 ```
 
 ### Step 4 — Check Git status
@@ -67,19 +72,13 @@ Look for:
 git commit -m "docs: add README"
 ```
 
-### Step 7 — Stage and commit `.gitignore`
-```bash
-git add .gitignore
-git commit -m "chore: add gitignore for Node"
-```
-
-### Step 8 — Stage and commit `app.js`
+### Step 7 — Stage and commit `app.js`
 ```bash
 git add app.js
 git commit -m "feat: initial app entry point"
 ```
 
-### Step 9 — View the history
+### Step 8 — View the history
 ```bash
 git log --oneline
 ```
@@ -87,7 +86,7 @@ git log --oneline
 ## Checkpoint
 You should now have:
 - a `.git` directory
-- three commits
+- two commits
 - a clean working tree
 
 Check:
@@ -115,8 +114,10 @@ Understand the difference between unstaged changes and staged changes.
 ## Steps
 
 ### Step 1 — Edit `app.js`
-```bash
-echo "console.log('world');" >> app.js
+
+Open `app.js` in your editor and add this line at the end:
+```javascript
+console.log('world');
 ```
 
 ### Step 2 — View the unstaged diff
@@ -187,8 +188,14 @@ Look for:
 - the asterisk `*`
 
 ### Step 3 — Create a new file on this branch
+
+**Create `header.html`** with this content:
+```html
+<h1>My App</h1>
+```
+
+Then:
 ```bash
-echo "<h1>My App</h1>" > header.html
 git add header.html
 git commit -m "feat: add header component"
 ```
@@ -207,8 +214,14 @@ git switch -c feature/footer
 ```
 
 ### Step 6 — Add another file
+
+**Create `footer.html`** with this content:
+```html
+<footer>© 2026</footer>
+```
+
+Then:
 ```bash
-echo "<footer>© 2026</footer>" > footer.html
 git add footer.html
 git commit -m "feat: add footer component"
 ```
@@ -261,9 +274,15 @@ git log --oneline --graph --all --decorate
 
 ## Part B — Create a conflict
 
-### Step 4 — On main, replace the first line of `app.js`
+### Step 4 — On main, change `app.js`
+
+Open `app.js` and replace the content with:
+```javascript
+console.log('Hello from main!');
+```
+
+Then:
 ```bash
-echo 'console.log("Hello from main!");' > app.js
 git add app.js
 git commit -m "fix: update log message"
 ```
@@ -274,8 +293,14 @@ git switch feature/footer
 ```
 
 ### Step 6 — Change the same line differently
+
+Open `app.js` and replace the content with:
+```javascript
+console.log('Hello from footer branch!');
+```
+
+Then:
 ```bash
-echo 'console.log("Hello from footer branch!");' > app.js
 git add app.js
 git commit -m "fix: update log in footer branch"
 ```
@@ -349,8 +374,10 @@ Practice safer undo operations and understand what each one affects.
 ## Part A — Discard an unstaged change
 
 ### Step 1 — Edit `README.md`
-```bash
-echo "oops" >> README.md
+
+Open `README.md` and add this line at the end:
+```
+oops
 ```
 
 ### Step 2 — View the diff
@@ -371,8 +398,14 @@ git diff
 ## Part B — Unstage a file
 
 ### Step 5 — Make another change
+
+Open `README.md` and add this line at the end:
+```
+something
+```
+
+Then:
 ```bash
-echo "something" >> README.md
 git add README.md
 git status
 ```
