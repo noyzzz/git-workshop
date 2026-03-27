@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Slides from './components/Slides'
 import Labs from './components/Labs'
 
@@ -86,10 +86,12 @@ function Hero({ onNavigate }) {
 
 export default function App() {
   const [view, setView] = useState(VIEWS.HOME)
-  const [initialLab, setInitialLab] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [activeLab, setActiveLab] = useState(0)
+  const labScrollPositions = useRef({})
 
-  function navigateTo(nextView, labIndex = 0) {
-    setInitialLab(labIndex)
+  function navigateTo(nextView, labIndex) {
+    if (labIndex !== undefined) setActiveLab(labIndex)
     setView(nextView)
   }
 
@@ -115,7 +117,7 @@ export default function App() {
           </button>
           <button
             className={`nav-btn ${view === VIEWS.LABS ? 'active' : ''}`}
-            onClick={() => navigateTo(VIEWS.LABS, 0)}
+            onClick={() => setView(VIEWS.LABS)}
           >
             🧪 Labs
           </button>
@@ -123,8 +125,8 @@ export default function App() {
       </header>
 
       {view === VIEWS.HOME   && <Hero onNavigate={navigateTo} />}
-      {view === VIEWS.SLIDES && <Slides />}
-      {view === VIEWS.LABS   && <Labs initialLab={initialLab} />}
+      {view === VIEWS.SLIDES && <Slides currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />}
+      {view === VIEWS.LABS   && <Labs activeLab={activeLab} setActiveLab={setActiveLab} scrollPositions={labScrollPositions} />}
     </>
   )
 }

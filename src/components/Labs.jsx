@@ -249,8 +249,7 @@ function LabSection({ lab, completedSteps, onToggle }) {
 
 const STORAGE_KEY = 'git-workshop-progress'
 
-export default function Labs({ initialLab = 0 }) {
-  const [activelab, setActiveLab] = useState(initialLab)
+export default function Labs({ activeLab: activelab, setActiveLab, scrollPositions }) {
   const [completedSteps, setCompletedSteps] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
@@ -264,6 +263,22 @@ export default function Labs({ initialLab = 0 }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(completedSteps))
   }, [completedSteps])
 
+  useEffect(() => {
+    const el = contentRef.current
+    if (!el) return
+
+    const saved = scrollPositions.current[activelab]
+    if (saved != null) {
+      requestAnimationFrame(() => { el.scrollTop = saved })
+    }
+
+    function onScroll() {
+      scrollPositions.current[activelab] = el.scrollTop
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [activelab, scrollPositions])
+
   function toggleStep(stepId) {
     setCompletedSteps((prev) => ({
       ...prev,
@@ -272,8 +287,10 @@ export default function Labs({ initialLab = 0 }) {
   }
 
   function handleNavClick(index) {
+    if (contentRef.current) {
+      scrollPositions.current[activelab] = contentRef.current.scrollTop
+    }
     setActiveLab(index)
-    contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function getLabProgress(lab) {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { slides } from '../data/slides'
 
 // ─── Slide renderers ─────────────────────────────────
@@ -494,8 +494,9 @@ function SlideContent({ slide }) {
 
 // ─── Main Slides component ─────────────────────────
 
-export default function Slides() {
-  const [current, setCurrent] = useState(0)
+export default function Slides({ currentSlide, setCurrentSlide }) {
+  const current = currentSlide
+  const setCurrent = setCurrentSlide
 
   const prev = useCallback(() => setCurrent((c) => Math.max(0, c - 1)), [])
   const next = useCallback(() => setCurrent((c) => Math.min(slides.length - 1, c + 1)), [])
