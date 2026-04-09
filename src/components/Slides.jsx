@@ -1,5 +1,4 @@
 import { useEffect, useCallback } from 'react'
-import { slides } from '../data/slides'
 
 // ─── Slide renderers ─────────────────────────────────
 
@@ -494,7 +493,7 @@ function SlideContent({ slide }) {
 
 // ─── Main Slides component ─────────────────────────
 
-export default function Slides({ currentSlide, setCurrentSlide }) {
+export default function Slides({ slides, currentSlide, setCurrentSlide, sessionLabel }) {
   const current = currentSlide
   const setCurrent = setCurrentSlide
 
@@ -517,7 +516,7 @@ export default function Slides({ currentSlide, setCurrentSlide }) {
     <div className="slides-view">
       {/* Sidebar */}
       <aside className="slides-sidebar">
-        <div className="slides-sidebar-title">All Slides</div>
+        <div className="slides-sidebar-title">{sessionLabel} Slides</div>
         {slides.map((s, i) => (
           <div
             key={s.id}

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { labs } from '../data/labs'
 
 // ─── Copy button ──────────────────────────────────────
 
@@ -172,14 +171,14 @@ function Step({ step, index, completed, onToggle }) {
 
 // ─── Single lab section ───────────────────────────────
 
-function LabSection({ lab, completedSteps, onToggle }) {
+function LabSection({ lab, completedSteps, onToggle, totalLabs }) {
   const allStepIds = lab.parts.flatMap((p) => p.steps.map((s) => s.id))
   const doneCount = allStepIds.filter((id) => completedSteps[id]).length
 
   return (
     <div className="lab-section">
       <div className="lab-section-header">
-        <div className="lab-number-badge">Lab {lab.id} of {labs.length}</div>
+        <div className="lab-number-badge">Lab {lab.id} of {totalLabs}</div>
         <h2 className="lab-title">
           <span className="lab-title-emoji">{lab.emoji}</span>
           {lab.title}
@@ -247,12 +246,10 @@ function LabSection({ lab, completedSteps, onToggle }) {
 
 // ─── Main Labs component ──────────────────────────────
 
-const STORAGE_KEY = 'git-workshop-progress'
-
-export default function Labs({ activeLab: activelab, setActiveLab, scrollPositions }) {
+export default function Labs({ labs, activeLab: activelab, setActiveLab, scrollPositions, storageKey, sessionLabel }) {
   const [completedSteps, setCompletedSteps] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
+      return JSON.parse(localStorage.getItem(storageKey) || '{}')
     } catch {
       return {}
     }
@@ -260,8 +257,16 @@ export default function Labs({ activeLab: activelab, setActiveLab, scrollPositio
   const contentRef = useRef(null)
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(completedSteps))
-  }, [completedSteps])
+    localStorage.setItem(storageKey, JSON.stringify(completedSteps))
+  }, [completedSteps, storageKey])
+
+  useEffect(() => {
+    try {
+      setCompletedSteps(JSON.parse(localStorage.getItem(storageKey) || '{}'))
+    } catch {
+      setCompletedSteps({})
+    }
+  }, [storageKey])
 
   useEffect(() => {
     const el = contentRef.current
@@ -303,7 +308,7 @@ export default function Labs({ activeLab: activelab, setActiveLab, scrollPositio
     <div className="labs-view">
       {/* Sidebar */}
       <aside className="labs-sidebar">
-        <div className="labs-sidebar-title">Lab Sections</div>
+        <div className="labs-sidebar-title">{sessionLabel} Labs</div>
         {labs.map((lab, i) => {
           const { done, total } = getLabProgress(lab)
           const isComplete = done === total
@@ -352,6 +357,7 @@ export default function Labs({ activeLab: activelab, setActiveLab, scrollPositio
           lab={labs[activelab]}
           completedSteps={completedSteps}
           onToggle={toggleStep}
+          totalLabs={labs.length}
         />
 
         {/* Bottom navigation between labs */}
